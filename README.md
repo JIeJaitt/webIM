@@ -74,3 +74,7 @@ func (ctrl *UserCtrl)Register(w){
     user = userServer.Register(mobile,passwd)
 }
 ```
+
+
+## 未来计划
+1. 写完后到处搜搜看同类型的别人怎么写的
