@@ -1,21 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 )
 
 func userLogin(writer http.ResponseWriter,
 	request *http.Request) {
-	// 数据库操作
-	// 逻辑处理
-
-	// restapi json/xml返回
-
-	// 1. 获取前端传递的参数
-	// mobile,passwd
-	// 解析参数
-	// 如何获得参数
 
 	// 解析参数 记得先 request.ParseForm()
 	request.ParseForm()
@@ -23,26 +16,44 @@ func userLogin(writer http.ResponseWriter,
 	mobile := request.PostForm.Get("mobile")
 	passwd := request.PostForm.Get("passwd")
 
-	//
 	loginok := false
 	if mobile == "18600000000" && passwd == "123456" {
 		loginok = true
 	}
-
-	str := `{"code":0,"data":{"id":1,"token":"test"}}`
-	if !loginok {
-		str = `{"code":-1,"msg":"密码不正确"}`
+	if loginok {
+		data := make(map[string]interface{})
+		data["id"] = 1
+		data["token"] = "test"
+		Resp(writer, 0, data, "")
+	} else {
+		Resp(writer, -1, nil, "密码不正确")
 	}
-	// 设置header 为 JSON 默认的text/html，所以特别指出返回的为application/json
-	// 设置header
-	writer.Header().Set("Content-Type", "application/json")
-	// 设置200状态
-	writer.WriteHeader(http.StatusOK)
-	// 输出
-	writer.Write([]byte(str))
-	// 返回 json ok
-
 	io.WriteString(writer, "hello,world!")
+}
+
+type H struct {
+	Code int         `json:"code""`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data,omitempty"`
+}
+
+func Resp(w http.ResponseWriter, code int, data interface{}, msg string) {
+	w.Header().Set("Content-Type", "application/json")
+	// 设置200状态
+	w.WriteHeader(http.StatusOK)
+	// 定义一个结构体
+	h := H{
+		Code: code,
+		Msg:  msg,
+		Data: data,
+	}
+	// 将结构体转化为字符串
+	ret, err := json.Marshal(h)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	// 输出
+	w.Write(ret)
 }
 
 func main() {
