@@ -2,15 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
 )
 
-func userLogin(writer http.ResponseWriter,
-	request *http.Request) {
-
-	// 解析参数 记得先 request.ParseForm()
+func userLogin(writer http.ResponseWriter, request *http.Request) {
+	// 解析参数
 	request.ParseForm()
 	// 获取账号密码
 	mobile := request.PostForm.Get("mobile")
@@ -56,9 +55,27 @@ func Resp(w http.ResponseWriter, code int, data interface{}, msg string) {
 	w.Write(ret)
 }
 
+func RegisterView() {
+	tpl, err := template.ParseGlob("view/**/*")
+	if err != nil {
+		// 模版渲染出错，直接打印并直接退出
+		log.Fatal(err.Error())
+	}
+	for _, v := range tpl.Templates() {
+		tplname := v.Name()
+		http.HandleFunc(tplname, func(writer http.ResponseWriter, request *http.Request) {
+			tpl.ExecuteTemplate(writer, tplname, nil)
+		})
+	}
+}
+
 func main() {
 	// 绑定请求和处理函数
 	http.HandleFunc("/user/login", userLogin)
+	// 提供指定目录的静态文件支持
+	http.Handle("/asset/", http.FileServer(http.Dir(".")))
+	// 模版渲染
+	RegisterView()
 	// 启动Web服务器
 	http.ListenAndServe(":8080", nil)
 }
