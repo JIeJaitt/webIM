@@ -23,20 +23,35 @@ type User struct {
 服务层service,专门用来存放数据库业务服务的,如
 注册、登录
 ## 2、查询单个用户Find,参数userId
+```go
 DbEngin.ID(userId).Get(&User)
+```
+
 ## 3、查询满足某一类条件的Search
+```go
 result :=make([]User,0)
 DbEngin.where("mobile=? ",moile).Find(&result)
 DbEngin.where("mobile=? ",moile).Get(&User)
+```
+
 ## 4、创建一条记录Create
+```go
 DBengin.InsertOne(&User)
+```
+
 ## 5、修改某条记录Update
+```go
 DBengin.ID(userId).Update(&User)
 // update ... where id = xx
 DBengin.Where("a=? and b=?",a,b).Update(&User)
 DBengin.Where("a=? and b=?",a,b).Cols("nick_name").Update(&User)
+```
+
 ## 6、删除某条记录Delete
+```go
 DBengin.ID(userId).Delete(&User)
+```
+
 ## 7、MD5加密函数
 ```go
 import (
