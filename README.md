@@ -38,7 +38,7 @@ DBengin.Where("a=? and b=?",a,b).Cols("nick_name").Update(&User)
 ## 6、删除某条记录Delete
 DBengin.ID(userId).Delete(&User)
 ## 7、MD5加密函数
-```cgo
+```go
 import (
 	"crypto/md5"
 	"encoding/hex"
