@@ -25,7 +25,6 @@ type User struct {
 ## 2、查询单个用户Find,参数userId
 DbEngin.ID(userId).Get(&User)
 ## 3、查询满足某一类条件的Search
-//
 result :=make([]User,0)
 DbEngin.where("mobile=? ",moile).Find(&result)
 DbEngin.where("mobile=? ",moile).Get(&User)
@@ -74,7 +73,3 @@ func (ctrl *UserCtrl)Register(w){
     user = userServer.Register(mobile,passwd)
 }
 ```
-
-
-## 未来计划
-1. 写完后到处搜搜看同类型的别人怎么写的
