@@ -42,5 +42,22 @@ func (s *UserService) Register(mobile, plainpwd, nickname, avatar, sex string) (
 
 // 登陆函数
 func (s *UserService) Login(mobile, plainpwd string) (user model.User, err error) {
-	return user, nil
+	// 通过手机号查询用户
+	tmp := model.User{}
+	DbEngin.Where("mobile=?", mobile).Get(&tmp)
+	// 如果没有找到
+	if tmp.Id == 0 {
+		return tmp, errors.New("该用户不存在")
+	}
+	// 查询到手机号之后比对密码
+	if util.ValidatePasswd(plainpwd, tmp.Salt, tmp.Passwd) {
+		return tmp, errors.New("密码不正确")
+	}
+	// 为了安全起见刷新 token
+	str := fmt.Sprintf("%d", time.Now().Unix())
+	token := util.MD5Encode(str)
+	tmp.Token = token
+	DbEngin.ID(tmp.Id).Cols("token").Update(&tmp)
+
+	return tmp, nil
 }
