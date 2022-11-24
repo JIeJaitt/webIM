@@ -26,6 +26,10 @@ func main() {
 	// 绑定请求和处理函数
 	http.HandleFunc("/user/login", ctrl.UserLogin)
 	http.HandleFunc("/user/register", ctrl.UserRegister)
+	http.HandleFunc("/contact/loadcommunity", ctrl.LoadCommunity)
+	http.HandleFunc("/contact/loadfriend", ctrl.LoadFriend)
+	http.HandleFunc("/contact/joincommunity", ctrl.JoinCommunity)
+	http.HandleFunc("/contact/addfriend", ctrl.Addfriend)
 	// 提供指定目录的静态文件支持
 	http.Handle("/asset/", http.FileServer(http.Dir(".")))
 	// 模版渲染

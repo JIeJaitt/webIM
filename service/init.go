@@ -23,7 +23,9 @@ func init() {
 	// 数据库最大打开的连接数
 	DbEngin.SetMaxOpenConns(2)
 	// 自动创建表结构
-	DbEngin.Sync2(new(model.User))
+	DbEngin.Sync2(new(model.User),
+		new(model.Contact),
+		new(model.Community))
 	// DbEngin = dbengin
 	fmt.Println("init data base ok")
 }
